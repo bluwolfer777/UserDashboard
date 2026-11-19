@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    image: ghcr.io/bluwolfer777/userdashboard:latest
+    # build: .   # uncomment to build locally instead of pulling
+    container_name: user-dashboard
+    restart: unless-stopped
+    ports:
+      - "8080:3000"
+    env_file:
+      - .env
+    volumes:
+      - dashboard-data:/data
+
+volumes:
+  dashboard-data:

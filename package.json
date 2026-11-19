@@ -1,0 +1,21 @@
+{
+  "name": "user-dashboard",
+  "version": "1.0.0",
+  "description": "Self-hosted homepage for internal services with Active Directory / LDAP admin login",
+  "main": "src/server.js",
+  "private": true,
+  "license": "GPL-3.0",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "ldapts": "^7.3.1",
+    "memorystore": "^1.6.7",
+    "multer": "^2.0.2"
+  }
+}

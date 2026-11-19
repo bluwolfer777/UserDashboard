@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amministrazione</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="admin">
+  <!-- Login -->
+  <section id="login-view" class="login-wrap" hidden>
+    <form id="login-form" class="card login-card">
+      <h1>Amministrazione</h1>
+      <p class="muted" id="login-hint">Accedi con un account amministratore.</p>
+      <label>Utente
+        <input name="username" autocomplete="username" required autofocus>
+      </label>
+      <label>Password
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <p class="error" id="login-error" hidden></p>
+      <button type="submit" class="btn btn-primary">Accedi</button>
+      <a href="/" class="back-link">← Torna alla homepage</a>
+    </form>
+  </section>
+
+  <!-- Admin -->
+  <section id="admin-view" hidden>
+    <header class="topbar">
+      <strong>Amministrazione</strong>
+      <span class="spacer"></span>
+      <span class="muted" id="whoami"></span>
+      <a class="btn" href="/" target="_blank" rel="noopener">Apri homepage</a>
+      <button class="btn" id="logout">Esci</button>
+    </header>
+
+    <div class="admin-layout">
+      <div class="admin-col">
+        <!-- Appearance -->
+        <form id="appearance-form" class="card">
+          <h2>Aspetto</h2>
+          <label>Titolo
+            <input name="title" maxlength="120">
+          </label>
+          <label>Sottotitolo
+            <input name="subtitle" maxlength="240">
+          </label>
+          <label>Colore del testo
+            <select name="textColor">
+              <option value="light">Chiaro (per sfondi scuri)</option>
+              <option value="dark">Scuro (per sfondi chiari)</option>
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Sfondo</legend>
+            <div class="seg" role="radiogroup">
+              <label><input type="radio" name="bgType" value="color"> Tinta unita</label>
+              <label><input type="radio" name="bgType" value="gradient"> Sfumatura</label>
+              <label><input type="radio" name="bgType" value="image"> Immagine</label>
+            </div>
+
+            <div data-bg="color">
+              <label>Colore <input type="color" name="color"></label>
+            </div>
+
+            <div data-bg="gradient" class="row">
+              <label>Da <input type="color" name="gradientFrom"></label>
+              <label>A <input type="color" name="gradientTo"></label>
+              <label class="grow">Angolo <span class="val" data-for="gradientAngle"></span>
+                <input type="range" name="gradientAngle" min="0" max="360" step="5">
+              </label>
+            </div>
+
+            <div data-bg="image">
+              <div class="row">
+                <label class="btn file-btn">Carica immagine…
+                  <input type="file" id="bg-file" accept="image/*" hidden>
+                </label>
+                <button type="button" class="btn btn-danger" id="bg-remove">Rimuovi immagine</button>
+              </div>
+              <label>Oscuramento <span class="val" data-for="overlay"></span>
+                <input type="range" name="overlay" min="0" max="0.9" step="0.05">
+              </label>
+              <label>Sfocatura <span class="val" data-for="blur"></span>
+                <input type="range" name="blur" min="0" max="20" step="1">
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="row end">
+            <span class="status" id="appearance-status"></span>
+            <button class="btn btn-primary" type="submit">Salva aspetto</button>
+          </div>
+        </form>
+
+        <!-- Links list -->
+        <section class="card">
+          <div class="row">
+            <h2 class="grow">Collegamenti</h2>
+            <button class="btn btn-primary" id="add-link">+ Nuovo</button>
+          </div>
+          <ul id="link-list" class="link-list"></ul>
+          <p class="muted" id="link-empty" hidden>Nessun collegamento. Aggiungine uno con “+ Nuovo”.</p>
+        </section>
+      </div>
+
+      <!-- Preview -->
+      <div class="admin-col preview-col">
+        <div class="card">
+          <h2>Anteprima</h2>
+          <div id="preview" class="preview">
+            <div class="bg-layer"></div>
+            <div class="preview-inner">
+              <div class="preview-title" id="preview-title"></div>
+              <div class="preview-sub" id="preview-sub"></div>
+              <div class="grid grid--small" id="preview-grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Link editor dialog -->
+  <dialog id="link-dialog">
+    <form id="link-form" method="dialog" class="dialog-body">
+      <h2 id="link-dialog-title">Nuovo collegamento</h2>
+      <label>Nome *
+        <input name="name" required maxlength="80">
+      </label>
+      <label>URL *
+        <input name="url" required placeholder="https://servizio.esempio.local">
+      </label>
+      <label>Descrizione (tooltip)
+        <input name="description" maxlength="160">
+      </label>
+      <label class="check"><input type="checkbox" name="newTab"> Apri in una nuova scheda</label>
+
+      <fieldset>
+        <legend>Icona</legend>
+        <div class="seg">
+          <label><input type="radio" name="iconMode" value="letter"> Iniziali</label>
+          <label><input type="radio" name="iconMode" value="emoji"> Emoji</label>
+          <label><input type="radio" name="iconMode" value="upload"> Carica file</label>
+          <label><input type="radio" name="iconMode" value="url"> URL immagine</label>
+        </div>
+        <div data-icon="letter emoji" class="row">
+          <label>Colore riquadro <input type="color" name="color"></label>
+          <label data-icon="emoji" class="grow">Emoji <input name="emoji" maxlength="8" placeholder="📁"></label>
+        </div>
+        <div data-icon="upload">
+          <input type="file" name="iconFile" accept="image/*">
+          <p class="muted small" id="current-icon-note" hidden>Lascia vuoto per mantenere l'icona attuale.</p>
+        </div>
+        <div data-icon="url">
+          <input name="iconUrl" placeholder="https://…/logo.png">
+        </div>
+      </fieldset>
+
+      <div class="row">
+        <div class="tile-preview" id="tile-preview"></div>
+        <span class="spacer"></span>
+        <p class="error" id="link-error" hidden></p>
+      </div>
+
+      <div class="row end">
+        <button type="button" class="btn" id="link-cancel">Annulla</button>
+        <button type="submit" class="btn btn-primary" value="save">Salva</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/common.js"></script>
+  <script src="/admin.js"></script>
+</body>
+</html>
